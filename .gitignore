@@ -1,0 +1,26 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+
+# Ignore Dymola output, log and temporary files (in alphabetical order)
+*.bak-mo
+*.mat
+*.mof
+buildlog.txt
+dsfinal.txt
+dsin.txt
+dslog.txt
+dsmodel.c
+dsmodelext*.c
+dsmodelext*.obj
+dsres.txt
+dymosim.exe
+dymosim.exp
+dymosim.lib
+empty.txt
+failure
+request
+stat
+status
+stop
+success
