@@ -6,6 +6,11 @@ Created on Fri Sep 30 08:19:24 2016
 
 Extended Dymola-Python interface
 
+REQUIREMENTS:
+=============
+- Dymola 2015 or newer
+- Python 2.x (Interface does not support Python 3.x)
+
 Usage:
 ======
 import dpi
@@ -18,8 +23,30 @@ dymola = dpi.DymolaInterface()
 import os
 import sys
 
-PATH_DPI = 'C:\Program Files (x86)\Dymola 2017\Modelica\Library\python_interface\dymola.egg'
-sys.path.append(os.path.normpath(PATH_DPI))
+
+class NoDymolaFoundException(Exception):
+    def __str__(self):
+        return('No Dymola installation found in environmental variables.')
+
+
+def get_dymola_python_interface_path():
+    """get the path of the dymola python interface from windows env. variables
+
+    :returns: path as a string
+    :rtype: str
+
+    :raises: NoDymolaFoundException, if there is no path to a Dymola
+             installation in the environmental variables.
+    """
+    envpaths = os.getenv('PATH').split(';')
+    path_dymola = next((s for s in envpaths if 'Dymola' in s), None)
+
+    try:
+        path_dpi = os.path.normpath(os.path.join(path_dymola, '..\Modelica\Library\python_interface\dymola.egg'))
+    except TypeError:
+        raise NoDymolaFoundException()
+
+    return path_dpi
 
 
 def DymolaInterface():
@@ -32,10 +59,11 @@ def DymolaInterface():
         loads data from the resultfile and provides them in form of an
         dictionary. See documentation of the modul for more information.
     """
-    from dymola.dymola_interface import DymolaInterface
-    from dymola.dymola_exception import DymolaException
-
-    dymola = DymolaInterface()
+    try:
+        from dymola.dymola_interface import DymolaInterface
+        from dymola.dymola_exception import DymolaException
+    except ImportError as err:
+        raise ImportError('Import of DymolaInterface failed.\n {}'.format(err.args))
 
     def simulateModelwithResults(*args, **kwargs):
         """simulate a modelica model within Dymola and returns simulated values
@@ -109,6 +137,14 @@ def DymolaInterface():
 
         return data
 
+    # initialize dymola-interface
+    dymola = DymolaInterface()
+
     # Adding the extended simulateModel() to dymola
     setattr(dymola, 'simulateModelwithResults', simulateModelwithResults)
     return dymola
+
+
+# Add path to Dymola-Python interface to the python-path.
+path_dpi = get_dymola_python_interface_path()
+sys.path.append(os.path.normpath(path_dpi))
