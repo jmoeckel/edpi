@@ -129,8 +129,12 @@ class NoDymolaFoundException(Exception):
                ' interface BEFORE invoking \'DymolaInterface()\'!')
 
 
-def get_dymola_python_interface_path():
+def get_dymola_python_interface_path(key='Dymola'):
     """get the path of the dymola python interface from windows env. variables
+
+    :param key: optional input, keyword, that identifies the path of the
+                Dymola installatio
+    :type key: str
 
     :returns: path as a string
     :rtype: str
@@ -139,7 +143,7 @@ def get_dymola_python_interface_path():
              installation in the environmental variables.
     """
     envpaths = os.getenv('PATH').split(';')
-    path_dymola = next((s for s in envpaths if 'Dymola' in s), None)
+    path_dymola = next((s for s in envpaths if key in s), None)
 
     try:
         path_dpi = os.path.normpath(os.path.join(path_dymola, '..\Modelica\Library\python_interface\dymola.egg'))
