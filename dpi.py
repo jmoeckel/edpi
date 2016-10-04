@@ -24,31 +24,6 @@ import os
 import sys
 
 
-class NoDymolaFoundException(Exception):
-    def __str__(self):
-        return('No Dymola installation found in environmental variables.')
-
-
-def get_dymola_python_interface_path():
-    """get the path of the dymola python interface from windows env. variables
-
-    :returns: path as a string
-    :rtype: str
-
-    :raises: NoDymolaFoundException, if there is no path to a Dymola
-             installation in the environmental variables.
-    """
-    envpaths = os.getenv('PATH').split(';')
-    path_dymola = next((s for s in envpaths if 'Dymola' in s), None)
-
-    try:
-        path_dpi = os.path.normpath(os.path.join(path_dymola, '..\Modelica\Library\python_interface\dymola.egg'))
-    except TypeError:
-        raise NoDymolaFoundException()
-
-    return path_dpi
-
-
 def DymolaInterface():
     """Instantiates an extended version of the Dymola-Python interface
 
@@ -145,6 +120,38 @@ def DymolaInterface():
     return dymola
 
 
+class NoDymolaFoundException(Exception):
+    def __str__(self):
+        return('No Dymola installation found in environmental variables.'
+               ' In case that there is a Dymola-installation available, but it'
+               ' is not included in the windows environmental variables, you '
+               ' have to manually include the path to the Dymola-Python'
+               ' interface BEFORE invoking \'DymolaInterface()\'!')
+
+
+def get_dymola_python_interface_path():
+    """get the path of the dymola python interface from windows env. variables
+
+    :returns: path as a string
+    :rtype: str
+
+    :raises: NoDymolaFoundException, if there is no path to a Dymola
+             installation in the environmental variables.
+    """
+    envpaths = os.getenv('PATH').split(';')
+    path_dymola = next((s for s in envpaths if 'Dymola' in s), None)
+
+    try:
+        path_dpi = os.path.normpath(os.path.join(path_dymola, '..\Modelica\Library\python_interface\dymola.egg'))
+    except TypeError:
+        raise NoDymolaFoundException()
+
+    return path_dpi
+
+
 # Add path to Dymola-Python interface to the python-path.
-path_dpi = get_dymola_python_interface_path()
+try:
+    path_dpi = get_dymola_python_interface_path()
+except:
+    raise
 sys.path.append(os.path.normpath(path_dpi))
