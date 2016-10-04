@@ -50,6 +50,7 @@ def DymolaInterface():
         :param trajectoryNames: The possibility, to choose, which simulated
             parameters should be included in the output 'data'. If not set, all
             results are returned.
+        :type trajectoryNames: list (of strings)
 
         :returns: A dictionary, that contains simulated values. This dictionary
             structure is: {'param name':[param values]}
