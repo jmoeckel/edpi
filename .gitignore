@@ -3,6 +3,7 @@ __pycache__/
 *.py[cod]
 
 # Ignore Dymola output, log and temporary files (in alphabetical order)
+.cache/
 *.bak-mo
 *.mat
 *.mof
