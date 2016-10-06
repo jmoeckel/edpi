@@ -76,7 +76,7 @@ def DymolaInterface():
         success = dymola.simulateModel(*args, **reduced_kwargs)
         if not success:
             raise DymolaException('Simulation of was not successfull.'
-                                  ' Below is the translation log:\n\n'
+                                  ' Below is the translation log:\n{}'
                                   .format(dymola.getLastError()))
 
         # Check for user-given result-file and add file extension
@@ -97,19 +97,7 @@ def DymolaInterface():
         except KeyError:
             trajNames = dymola.readTrajectoryNames(resFile)
 
-        # At the moment, dymola.readMatrix() is invoked, as there is a bug
-        # in dymola.readTrajectory. Unfortunately. As this is very inefficient
-        allTrajNames = dymola.readTrajectoryNames(resFile)
-        values = dymola.readMatrix(resFile, 'data_2', len(allTrajNames), dymola.readTrajectorySize(resFile))
-
-        if allTrajNames == trajNames:
-            data = dict(zip(trajNames, values))
-        else:
-            data = {}
-            for trajName in trajNames:
-                ind = allTrajNames.index(trajName)
-                value = values[ind]
-                data.update({trajName: value})
+        data = _read_dymola_mat(dymola, trajNames, resFile)
 
         return data
 
@@ -121,6 +109,43 @@ def DymolaInterface():
     return dymola
 
 
+def _read_dymola_mat(dymola, trajNames, resFile):
+    # At the moment, dymola.readMatrix() is invoked, as there is a bug
+    # in dymola.readTrajectory. Unfortunately - as this is very
+    # inefficient
+
+    szI = dymola.readMatrixSize(resFile, 'dataInfo')
+    dataI = dymola.readMatrix(resFile, 'dataInfo', szI[0], szI[1])
+    sz1 = dymola.readMatrixSize(resFile, 'data_1')
+    data1 = dymola.readMatrix(resFile, 'data_1', sz1[0], sz1[1])
+    sz2 = dymola.readMatrixSize(resFile, 'data_2')
+    data2 = dymola.readMatrix(resFile, 'data_2', sz2[0], sz2[1])
+
+    # all trajectories - needed because of positions within data matrices
+    allTrajNms = dymola.readTrajectoryNames(resFile)
+
+    res = {}
+    for trajName in trajNames:
+        # this gets the position of the trajectory
+        ind = allTrajNms.index(trajName)
+
+        # this determines, if the trajectory is in data_1 or data_2
+        data = dataI[0][ind]
+
+        # this determines the position in data_1 or data_2,
+        # -1 because its matlab syntax (starting with 1 instead of 0)
+        dataInd = int(dataI[1][ind])-1
+
+        if data in (0, 2):
+            # 0: Case for Time -> its in data_2
+            values = data2[dataInd]
+        elif data == 1:
+            values = data1[dataInd]
+
+        res.update({trajName: values})
+    return res
+
+
 class NoDymolaFoundException(Exception):
     def __str__(self):
         return('No Dymola installation found in environmental variables.'
@@ -130,7 +155,7 @@ class NoDymolaFoundException(Exception):
                ' interface BEFORE invoking \'DymolaInterface()\'!')
 
 
-def get_dymola_python_interface_path(key='Dymola'):
+def _get_dymola_python_interface_path(key='Dymola'):
     """get the path of the dymola python interface from windows env. variables
 
     :param key: optional input, keyword, that identifies the path of the
@@ -156,7 +181,7 @@ def get_dymola_python_interface_path(key='Dymola'):
 
 # Add path to Dymola-Python interface to the python-path.
 try:
-    path_dpi = get_dymola_python_interface_path()
+    path_dpi = _get_dymola_python_interface_path()
 except:
     raise
 sys.path.append(os.path.normpath(path_dpi))
