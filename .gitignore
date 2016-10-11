@@ -1,9 +1,10 @@
 # Byte-compiled / optimized / DLL files
 __pycache__/
+tests/cache/
 *.py[cod]
 
 # Ignore Dymola output, log and temporary files (in alphabetical order)
-.cache/
+
 *.bak-mo
 *.mat
 *.mof
