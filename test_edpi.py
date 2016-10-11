@@ -31,7 +31,7 @@ class Test_SimulateModelWithResult():
         yield dymola
         print('...teardown...')
         dymola.close()
-        [os.remove(x) for x in os.listdir('.') if os.path.splitext(x)[1] not in ['.md', '.py', '.pyc', '.mo', ''] and x not in ['test_read.mat']]
+        [os.remove(x) for x in os.listdir('.') if os.path.splitext(x)[1] not in ['.md', '.py', '.pyc', '.mo', '']]
 
     def test_simulateModel_still_works(self, model, dymola):
         success = dymola.simulateModel(model)
