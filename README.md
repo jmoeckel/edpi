@@ -4,7 +4,7 @@ An extended version of the Python interface provided by Dymola
 ### Content
 Dymola provides a Python (2.7) interface. Unfortunately, the included `simulateModel` function only returns a success-boolean but not the actual simulation results. These have to be re-imported (using the API of the interface of some other .mat reader). 
 
-The dpi-module extends the Dymola-Python interface by one module `simulateModelwithResults` which provides the possibility to simulate a model with given simulation settings AND automatically use the simulated values, which are provided as an output in form of a dictionary. 
+The edpi-module extends the Dymola-Python interface by one module `simulateModelwithResults` which provides the possibility to simulate a model with given simulation settings AND automatically use the simulated values, which are provided as an output in form of a dictionary. 
 
 ### Except from the `simulateModelwithResults()`-documentation (Sphinx-syntax)
 ````Sphinx
@@ -31,8 +31,8 @@ The dpi-module extends the Dymola-Python interface by one module `simulateModelw
 
 ### Usage
 ```` Python
-import dpi
-dymola = dpi.DymolaInterface
+import edpi
+dymola = edpi.DymolaInterface
 
 # From here on, use the Interface described as in the documentation provided by
 # Dymola.
@@ -41,4 +41,4 @@ dymola = dpi.DymolaInterface
 ### Note
 The path to Dymola is gained by evaluating Windows environmental variables. If 
 your Dymola installation is not registered, add the path to the interface 
-manually by `sys.path.append([YOUR PATH])` before invoking `dpi.DymolaInterface()`.
+manually by `sys.path.append([YOUR PATH])` before invoking `edpi.DymolaInterface()`.
