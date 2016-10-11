@@ -23,7 +23,7 @@ import os
 import sys
 
 sys.path.append('..')
-import edpi
+from edpi import edpi
 
 
 class Test_Get_Dymola_Python_Interface_Path():

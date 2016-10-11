@@ -33,7 +33,7 @@ The edpi-module extends the Dymola-Python interface by one module `simulateModel
 
 ### Usage
 ```` Python
-import edpi
+from edpi import edpi
 dymola = edpi.DymolaInterface
 
 # From here on, use the Interface described as in the documentation provided by
