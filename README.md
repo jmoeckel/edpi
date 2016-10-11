@@ -18,6 +18,8 @@ The edpi-module extends the Dymola-Python interface by one module `simulateModel
 :rtype: dict
 
 :raises: DymolaException, if the simulation fails
+:raises: BadTrajectoryNamesException, if given trajectory names are not
+		 in the namespace of the considered .mat file
 
 ..note: 
     Besides the additional input argument 'trajectoryNames' and the
