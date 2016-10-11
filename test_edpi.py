@@ -22,35 +22,6 @@ class Test_Get_Dymola_Python_Interface_Path():
         assert('No Dymola installation' in str(excpt.value))
 
 
-@pytest.mark.parametrize('resfile', ['test_read.mat'])
-class Test_Read_Dymola_Mat():
-
-    @pytest.yield_fixture(scope='class')
-    def dymola(self):
-        dymola = edpi.DymolaInterface()
-        yield dymola
-        print('...teardown...')
-        dymola.close()
-
-    def test_is_working(self, dymola, resfile):
-        edpi._read_dymola_mat(dymola, ['t'], resfile)
-        assert(True)
-
-    def test_returns_dict(self, dymola, resfile):
-        res = edpi._read_dymola_mat(dymola, ['t'], resfile)
-        assert(isinstance(res, dict))
-        assert(res.keys() == ['t'])
-
-    def test_values_are_correct(self, dymola, resfile):
-        res = edpi._read_dymola_mat(dymola, ['t', 't0'], resfile)
-        t0 = res['t0']
-        t = res['t']
-        assert(t0 == [2, 2])
-        assert(len(t) == 502)
-        assert(t[0] == 0)
-        assert(t[-1] == 1)
-
-
 @pytest.mark.parametrize('model', ['test_edpi_1', 'test_edpi_2'])
 class Test_SimulateModelWithResult():
 
@@ -85,3 +56,8 @@ class Test_SimulateModelWithResult():
     def test_input_trajectoryNames_does_not_change_other_kwargs(self, model, dymola):
         data = dymola.simulateModelwithResults(model, trajectoryNames=['t'], resultFile='dsres_kwarg_{}'.format(model))
         assert(['t'] == data.keys())
+
+    def test_detects_bad_trajectoryName(self, model, dymola):
+        with pytest.raises(edpi.BadTrajectoryNameException) as excpt:
+            dymola.simulateModelwithResults(model, trajectoryNames=['not_existent'], resultFile='dsres_kwarg_{}'.format(model))
+        assert('Some of the input trajectory' in str(excpt.value))

@@ -57,6 +57,8 @@ def DymolaInterface():
         :rtype: dict
 
         :raises: DymolaException, if the simulation fails
+        :raises: BadTrajectoryNamesException, if given trajectory names are not
+                 in the namespace of the considered .mat file
 
         .. note::
             Besides the additional input argument 'trajectoryNames' and the
@@ -92,12 +94,26 @@ def DymolaInterface():
 
         # Check for user-input regarding the result-output - if non given,
         # all results will be returned
+        allTrajNames = dymola.readTrajectoryNames(resFile)
         try:
             trajNames = kwargs['trajectoryNames']
         except KeyError:
-            trajNames = dymola.readTrajectoryNames(resFile)
+            trajNames = allTrajNames
 
-        data = _read_dymola_mat(dymola, trajNames, resFile)
+        # get the size of simulated results
+        sz = dymola.readTrajectorySize(resFile)
+
+        # get the simulated values
+        values = dymola.readTrajectory(resFile, trajNames, sz)
+
+        # store them in a dict and map them to the trajectory name
+        try:
+            data = dict(zip(trajNames, values))
+        except TypeError as err:
+            if not set(trajNames).issubset(allTrajNames):
+                raise BadTrajectoryNameException()
+            else:
+                raise TypeError(err.args)
 
         return data
 
@@ -109,44 +125,6 @@ def DymolaInterface():
     return dymola
 
 
-def _read_dymola_mat(dymola, trajNames, resFile):
-    # At the moment, dymola.readMatrix() is invoked, as there is a bug
-    # in dymola.readTrajectory. Unfortunately - as this is very
-    # inefficient
-
-    szI = dymola.readMatrixSize(resFile, 'dataInfo')
-    dataI = dymola.readMatrix(resFile, 'dataInfo', szI[0], szI[1])
-    sz1 = dymola.readMatrixSize(resFile, 'data_1')
-    data1 = dymola.readMatrix(resFile, 'data_1', sz1[0], sz1[1])
-    sz2 = dymola.readMatrixSize(resFile, 'data_2')
-    data2 = dymola.readMatrix(resFile, 'data_2', sz2[0], sz2[1])
-
-    # all trajectories - needed because of positions within data matrices
-    allTrajNms = dymola.readTrajectoryNames(resFile)
-
-    # initialize result dictionary
-    res = {}
-    for trajName in trajNames:
-        # this gets the position of the trajectory
-        ind = allTrajNms.index(trajName)
-
-        # this determines, if the trajectory is in data_1 or data_2
-        data = dataI[0][ind]
-
-        # this determines the position in data_1 or data_2,
-        # -1 because its matlab syntax (starting with 1 instead of 0)
-        dataInd = int(dataI[1][ind])-1
-
-        if data in (0, 2):
-            # 0: Case for Time -> its in data_2
-            values = data2[dataInd]
-        elif data == 1:
-            values = data1[dataInd]
-
-        res.update({trajName: values})
-    return res
-
-
 class NoDymolaFoundException(Exception):
     def __str__(self):
         return('No Dymola installation found in environmental variables.'
@@ -154,6 +132,11 @@ class NoDymolaFoundException(Exception):
                ' is not included in the windows environmental variables, you '
                ' have to manually include the path to the Dymola-Python'
                ' interface BEFORE invoking \'DymolaInterface()\'!')
+
+
+class BadTrajectoryNameException(Exception):
+    def __str__(self):
+        return('Some of the input trajectory names are not valid!')
 
 
 def _get_dymola_python_interface_path(key='Dymola'):
