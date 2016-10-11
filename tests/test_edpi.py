@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-  Copyright (C) 2016  Jens Möckel <j.moeckel@udk-berlin.de>, All Rights Reserved
+  Copyright (C) 2016  Jens Möckel <moeckeljens@gmail.com, All Rights Reserved
 
   Implemented by Jens Möckel
 
