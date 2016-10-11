@@ -7,18 +7,18 @@ Tests for the dpi module regarding the extended simulateModel-functionality
 
 import pytest
 import os
-import dpi
+import edpi
 
 
 class Test_Get_Dymola_Python_Interface_Path():
 
     def test_is_working(self):
-        s = dpi._get_dymola_python_interface_path()
+        s = edpi._get_dymola_python_interface_path()
         assert(s)
 
     def test_detects_missing_dymola(self):
-        with pytest.raises(dpi.NoDymolaFoundException) as excpt:
-            dpi._get_dymola_python_interface_path(key='bla')
+        with pytest.raises(edpi.NoDymolaFoundException) as excpt:
+            edpi._get_dymola_python_interface_path(key='bla')
         assert('No Dymola installation' in str(excpt.value))
 
 
@@ -27,22 +27,22 @@ class Test_Read_Dymola_Mat():
 
     @pytest.yield_fixture(scope='class')
     def dymola(self):
-        dymola = dpi.DymolaInterface()
+        dymola = edpi.DymolaInterface()
         yield dymola
         print('...teardown...')
         dymola.close()
 
     def test_is_working(self, dymola, resfile):
-        dpi._read_dymola_mat(dymola, ['t'], resfile)
+        edpi._read_dymola_mat(dymola, ['t'], resfile)
         assert(True)
 
     def test_returns_dict(self, dymola, resfile):
-        res = dpi._read_dymola_mat(dymola, ['t'], resfile)
+        res = edpi._read_dymola_mat(dymola, ['t'], resfile)
         assert(isinstance(res, dict))
         assert(res.keys() == ['t'])
 
     def test_values_are_correct(self, dymola, resfile):
-        res = dpi._read_dymola_mat(dymola, ['t', 't0'], resfile)
+        res = edpi._read_dymola_mat(dymola, ['t', 't0'], resfile)
         t0 = res['t0']
         t = res['t']
         assert(t0 == [2, 2])
@@ -51,12 +51,12 @@ class Test_Read_Dymola_Mat():
         assert(t[-1] == 1)
 
 
-@pytest.mark.parametrize('model', ['test_dpi_1', 'test_dpi_2'])
+@pytest.mark.parametrize('model', ['test_edpi_1', 'test_edpi_2'])
 class Test_SimulateModelWithResult():
 
     @pytest.yield_fixture(scope='class')
     def dymola(self):
-        dymola = dpi.DymolaInterface()
+        dymola = edpi.DymolaInterface()
         yield dymola
         print('...teardown...')
         dymola.close()

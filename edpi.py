@@ -13,8 +13,8 @@ REQUIREMENTS:
 
 Usage:
 ======
-import dpi
-dymola = dpi.DymolaInterface()
+import edpi
+dymola = edpi.DymolaInterface()
 
 # from here on, use the Interface described as in the documentation provided by
 # Dymola.
@@ -124,6 +124,7 @@ def _read_dymola_mat(dymola, trajNames, resFile):
     # all trajectories - needed because of positions within data matrices
     allTrajNms = dymola.readTrajectoryNames(resFile)
 
+    # initialize result dictionary
     res = {}
     for trajName in trajNames:
         # this gets the position of the trajectory
@@ -162,7 +163,7 @@ def _get_dymola_python_interface_path(key='Dymola'):
                 Dymola installatio
     :type key: str
 
-    :returns: path as a string
+    :returns: path of the Dymola-Python interface
     :rtype: str
 
     :raises: NoDymolaFoundException, if there is no path to a Dymola
