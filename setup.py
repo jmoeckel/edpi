@@ -4,6 +4,7 @@ setup(
     version="0.1.0",
     description="An extension of the Dymola-Python interface provided by Dymola itsself.",
     url = "https://github.com/jmoeckel/edpi",
+	download_url = 'https://github.com/jmoeckel/edpi/tarball/0.1',
     author="Jens Möckel",
     author_email="j.moeckel@udk-berlin.de",
     packages = [],
