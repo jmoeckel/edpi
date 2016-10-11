@@ -1,8 +1,21 @@
 # -*- coding: utf-8 -*-
 """
-Created on Fri Sep 30 10:45:33 2016
-@author: jmoeckel
-Tests for the dpi module regarding the extended simulateModel-functionality
+  Copyright (C) 2016  Jens Möckel <j.moeckel@udk-berlin.de>, All Rights Reserved
+
+  Implemented by Jens Möckel
+
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  For a copy of the GNU General Public License see:
+  <http://www.gnu.org/licenses/>.
 """
 
 import pytest

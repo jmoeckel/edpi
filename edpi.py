@@ -1,10 +1,22 @@
 # -*- coding: utf-8 -*-
 """
-Created on Fri Sep 30 08:19:24 2016
+  Copyright (C) 2016  Jens Möckel <j.moeckel@udk-berlin.de>, All Rights Reserved
 
-@author: jmoeckel
+  Implemented by Jens Möckel
 
-Extended Dymola-Python interface
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  For a copy of the GNU General Public License see:
+      <http://www.gnu.org/licenses/>.
+
 
 REQUIREMENTS:
 =============
@@ -18,6 +30,15 @@ dymola = edpi.DymolaInterface()
 
 # from here on, use the Interface described as in the documentation provided by
 # Dymola.
+
+SOURCE AND IMPROVEMENTS:
+========================
+This module is hosted on GitHub (inlcuding some tests):
+    <https://github.com/jmoeckel/edpi>
+
+If you have any comment, improvment, extension or encounter one or another bug
+- please let me know in form of an issue in the repository mentioned above or
+just send me a mail.
 """
 
 import os
