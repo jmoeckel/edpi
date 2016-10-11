@@ -10,6 +10,5 @@ setup(
     download_url='https://github.com/jmoeckel/edpi/tarball/0.1.0',
     author="Jens Möckel",
     author_email="moeckeljens@gmail.com",
-    packages=[],
     license="GPL",
 )
