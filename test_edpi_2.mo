@@ -1,5 +1,5 @@
 within ;
-model test_dpi_2
+model test_edpi_2
   parameter Real t0=0;
   parameter Boolean decision( start = false);
   Real t;
@@ -14,4 +14,4 @@ equation
   annotation (Icon(coordinateSystem(preserveAspectRatio=false)), Diagram(
         coordinateSystem(preserveAspectRatio=false)),
     uses(Modelica(version="3.2.1")));
-end test_dpi_2;
+end test_edpi_2;

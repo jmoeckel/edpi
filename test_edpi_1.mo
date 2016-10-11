@@ -1,5 +1,5 @@
 within ;
-model test_dpi_1
+model test_edpi_1
   Real y;
   Real t;
 
@@ -13,4 +13,4 @@ equation
 
   annotation (Icon(coordinateSystem(preserveAspectRatio=false)), Diagram(
         coordinateSystem(preserveAspectRatio=false)));
-end test_dpi_1;
+end test_edpi_1;
